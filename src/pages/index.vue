@@ -29,6 +29,4 @@ const HelloWorld = defineAsyncComponent(
 );
 </script>
 
-<style scoped>
-/* Add your styles here */
-</style>
+<style scoped lang="scss"></style>

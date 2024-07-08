@@ -1,38 +1,43 @@
 <template>
-  <div>
-    <v-container>
-      <v-stepper v-model="step" non-linear>
-        <v-stepper-header>
+  <v-sheet class="flex-container">
+    <v-sheet class="stepper-container" elevation="2">
+      <v-stepper v-model="step" vertical class="stepper">
+        <v-stepper-header class="stepper-container">
           <v-stepper-item
-            v-for="n in 4"
-            :key="n"
-            :complete="step > n"
-            :step="n"
-            :color="step > n ? 'primary' : undefined"
-            :value="n"
-            @click="scrollToSection(n)"
+            v-for="(item, index) in items"
+            :key="item.id"
+            :step="index + 1"
+            :color="step == index + 1 ? 'primary' : undefined"
+            :value="index + 1"
+            @click="scrollToSection(item.id)"
             editable
           >
-            <v-card-title v-if="step == n">Step {{ n }}</v-card-title>
+            <template #default>
+              <v-card-title>{{ item.title }}</v-card-title>
+            </template>
           </v-stepper-item>
-          <v-divider v-for="n in 3" :key="`divider-${n}`"></v-divider>
         </v-stepper-header>
       </v-stepper>
-      <div ref="scrollArea" @scroll="handleScroll" class="scroll-area">
-        <div
-          v-for="i in 4"
-          :key="i"
-          :id="`section-${i}`"
-          class="scroll-section"
-        >
-          <v-card>
-            <v-card-title>Section {{ i }}</v-card-title>
-            <v-card-text>Some content for section {{ i }}...</v-card-text>
-          </v-card>
-        </div>
-      </div>
-    </v-container>
-  </div>
+    </v-sheet>
+    <v-sheet
+      ref="scrollArea"
+      @scroll="handleScroll"
+      class="scroll-area"
+      elevation="2"
+    >
+      <v-sheet
+        v-for="item in items"
+        :key="item.id"
+        :id="item.id"
+        class="scroll-section"
+      >
+        <v-card>
+          <v-card-title>{{ item.title }}</v-card-title>
+          <v-card-text>{{ item.content }}</v-card-text>
+        </v-card>
+      </v-sheet>
+    </v-sheet>
+  </v-sheet>
 </template>
 
 <script setup>
@@ -40,33 +45,43 @@ import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 
 const step = ref(1);
+const urlHash = ref(null);
 const scrollArea = ref(null);
 const route = useRoute();
 const router = useRouter();
 
 const handleScroll = () => {
-  const sections = scrollArea.value.children;
-  const scrollTop = scrollArea.value.scrollTop;
+  const sections = scrollArea.value.$el.children;
+  const scrollTop = scrollArea.value.$el.scrollTop;
   const sectionHeight = sections[0].offsetHeight;
   const newStep = Math.min(
     Math.floor(scrollTop / sectionHeight) + 1,
     sections.length
   );
+  urlHash.value = items[newStep - 1].id;
   step.value = newStep;
 };
 
-const scrollToSection = (sectionNumber) => {
-  const section = document.querySelector(`#section-${sectionNumber}`);
+const scrollToSection = (sectionId) => {
+  const section = document.querySelector(`#${sectionId}`);
   if (section) {
     section.scrollIntoView({ behavior: "smooth" });
-    step.value = sectionNumber;
+    urlHash.value = sectionId;
   }
 };
 
+const items = [
+  { id: "summary", title: "Summary", content: "Content 1" },
+  { id: "experience", title: "Experiences", content: "Content 2" },
+  { id: "education", title: "Education", content: "Content 3" },
+  { id: "archivement", title: "Archivements", content: "Content 4" },
+  { id: "skill", title: "Skills", content: "Content 5" },
+  { id: "hobby", title: "Hobbies", content: "Content 6" },
+];
+
 // Watch step changes to update URL hash
-watch(step, (newStep) => {
-  const sectionId = `section-${newStep}`;
-  router.replace({ hash: `#${sectionId}` });
+watch(urlHash, (newStep) => {
+  router.replace({ hash: `#${newStep}` });
 });
 
 // Scroll to the section based on URL hash on initial load
@@ -81,15 +96,31 @@ onMounted(() => {
 </script>
 
 <style scoped lang="scss">
+.flex-container {
+  display: flex;
+  width: 100%;
+}
+
+.stepper-container {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+}
+
+.stepper {
+  flex: 1 1 auto;
+}
+
 .scroll-area {
-  max-height: 600px;
+  flex: 1;
+  max-height: 750px;
   overflow-y: auto;
   border: 1px solid #ddd;
   padding: 10px;
 }
 
 .scroll-section {
-  height: 600px;
+  height: 750px;
   border-bottom: 1px solid #ddd;
   padding: 20px;
 }

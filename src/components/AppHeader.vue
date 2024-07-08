@@ -6,7 +6,7 @@
         @click.stop="drawer = !drawer"
       ></v-app-bar-nav-icon>
 
-      <v-toolbar-title>My App</v-toolbar-title>
+      <v-toolbar-title>My Profile</v-toolbar-title>
 
       <v-spacer></v-spacer>
 
@@ -70,28 +70,22 @@ const drawer = ref(false);
 const group = ref(null);
 const items = [
   {
-    icon: "mdi-discord",
-    title: "Foo",
-    value: "foo",
-    route: "/foo",
+    icon: "mdi-account",
+    title: "About Me",
+    value: "aboutme",
+    route: "/profile",
   },
   {
-    icon: "mdi-spotify",
-    title: "Bar",
-    value: "bar",
-    route: "/bar",
+    icon: "mdi-contacts",
+    title: "Contact",
+    value: "contact",
+    route: "/contact",
   },
   {
-    icon: "mdi-facebook",
-    title: "Fizz",
-    value: "fizz",
-    route: "/fizz",
-  },
-  {
-    icon: "mdi-instagram",
-    title: "Buzz",
-    value: "buzz",
-    route: "/buzz",
+    icon: "mdi-gift",
+    title: "Donate",
+    value: "donate",
+    route: "/donate",
   },
 ];
 const loaded = ref(false);
