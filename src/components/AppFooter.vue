@@ -1,48 +1,72 @@
-<template></template>
+<template>
+  <v-layout class="overflow-visible" style="height: 56px">
+    <v-bottom-navigation v-model="value" :bg-color="color" mode="shift">
+      <v-btn
+        v-for="(socialLink, index) in socialLinks"
+        :key="socialLink.label"
+        @click="changeValue(index, socialLink.link)"
+      >
+        <v-icon>{{ socialLink.icon }}</v-icon>
 
-<script>
-import { ref } from "vue";
-import { useRouter } from "vue-router";
+        <span>{{ socialLink.label }}</span>
+      </v-btn>
+    </v-bottom-navigation>
+  </v-layout>
+</template>
 
-export default {
-  setup() {
-    const email = ref("");
-    const router = useRouter();
+<script setup lang="ts">
+import { ref, computed } from "vue";
 
-    const subscribeFunc = () => {
-      window.alert("Thanks for your subscribe");
-    };
-
-    const socialLinks = [
-      { label: "YouTube", icon: "mdi-youtube", link: "/youtube" },
-      { label: "Instagram", icon: "mdi-instagram", link: "/instagram" },
-      { label: "Twitter", icon: "mdi-twitter", link: "/twitter" },
-      { label: "Facebook", icon: "mdi-facebook", link: "/facebook" },
-    ];
-
-    const links = [
-      [
-        { label: "Company", key: "header-1" },
-        { label: "About us", key: "item-1-1", link: "/about" },
-        { label: "Contact us", key: "item-1-3", link: "/contact" },
-      ],
-      [
-        { label: "Support", key: "header-2" },
-        { label: "Help center", key: "item-2-1", link: "/help" },
-        { label: "Terms of service", key: "item-2-2", link: "/termsofservice" },
-        { label: "Legal", key: "item-2-3", link: "/legal" },
-        { label: "Privacy policy", key: "item-2-4", link: "/policy" },
-      ],
-    ];
-
-    return {
-      email,
-      subscribeFunc,
-      socialLinks,
-      links,
-    };
+const socialLinks = [
+  {
+    label: "YouTube",
+    icon: "mdi-youtube",
+    link: "https://www.youtube.com",
   },
+  {
+    label: "Instagram",
+    icon: "mdi-instagram",
+    link: "https://www.instagram.com",
+  },
+  {
+    label: "Facebook",
+    icon: "mdi-facebook",
+    link: "https://www.facebook.com",
+  },
+  {
+    label: "Discord",
+    icon: "mdi-discord",
+    link: "https://www.discord.com",
+  },
+];
+const value = ref(1);
+const changeValue = (index: number, link: string) => {
+  value.value = index;
+  const link_window = window.open(link, "_blank");
 };
+
+const color = computed(() => {
+  switch (value.value) {
+    case 0:
+      return "blue-grey";
+    case 1:
+      return "teal";
+    case 2:
+      return "brown";
+    case 3:
+      return "indigo";
+    default:
+      return "blue-grey";
+  }
+});
 </script>
 
-<style scoped></style>
+<style scoped>
+.flex-nowrap {
+  flex-wrap: nowrap;
+}
+
+.align-center {
+  justify-content: center;
+}
+</style>

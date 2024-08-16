@@ -1,50 +1,51 @@
 <template>
-  <v-container>
-    <v-app-bar color="primary" prominent>
-      <v-app-bar-nav-icon
-        variant="text"
-        @click.stop="drawer = !drawer"
-      ></v-app-bar-nav-icon>
+  <v-app-bar
+    color="teal-darken-4"
+    image="https://picsum.photos/1920/1080?random"
+    prominent
+  >
+    <template v-slot:image>
+      <v-img
+        gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
+      ></v-img>
+    </template>
 
-      <v-toolbar-title>My Profile</v-toolbar-title>
+    <v-app-bar-nav-icon
+      variant="text"
+      @click.stop="drawer = !drawer"
+    ></v-app-bar-nav-icon>
 
-      <v-spacer></v-spacer>
+    <v-app-bar-title data-testid="test-toolbar-title"
+      >My Profile</v-app-bar-title
+    >
 
-      <v-text-field
-        v-model="searchQuery"
-        density="compact"
-        variant="solo"
-        label="Search"
-        append-inner-icon="mdi-magnify"
-        single-line
-        hide-details
-        flat
-        hint="Enter your query"
-        clearable
-        :loading="loading"
-        @click:append-inner="submitSearchQuery"
-        @keydown.enter="submitSearchQuery"
-      ></v-text-field>
+    <v-spacer></v-spacer>
 
-      <v-spacer></v-spacer>
-      <v-spacer></v-spacer>
+    <v-btn icon>
+      <v-icon>mdi-magnify</v-icon>
+    </v-btn>
 
-      <v-avatar v-if="isLogin">
-        <v-img
-          src="https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg"
-        ></v-img>
-      </v-avatar>
-      <v-btn variant="text" @click="toggleLogin" v-if="!isLogin">Login</v-btn>
-      <v-btn variant="text" @click="toggleLogout" v-if="isLogin">Logout</v-btn>
-      <!-- <v-spacer></v-spacer> -->
-    </v-app-bar>
-  </v-container>
+    <v-btn icon>
+      <v-icon>mdi-heart</v-icon>
+    </v-btn>
+
+    <v-btn icon>
+      <v-icon>mdi-dots-vertical</v-icon>
+    </v-btn>
+  </v-app-bar>
 
   <v-navigation-drawer
     v-model="drawer"
     :location="$vuetify.display.mobile ? 'bottom' : undefined"
     temporary
+    color="teal-darken-4"
+    image="https://picsum.photos/1920/1080?random"
   >
+    <template v-slot:image>
+      <v-img
+        gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
+      ></v-img>
+    </template>
     <v-list>
       <v-list-item
         v-for="item in items"
@@ -62,13 +63,17 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 
-const searchQuery = ref("");
 const isLogin = ref(false);
 const drawer = ref(false);
-const group = ref(null);
 const items = [
+  {
+    icon: "mdi-home",
+    title: "Home",
+    value: "home",
+    route: "/",
+  },
   {
     icon: "mdi-account",
     title: "About Me",
@@ -88,41 +93,6 @@ const items = [
     route: "/donate",
   },
 ];
-const loaded = ref(false);
-const loading = ref(false);
-
-watch(group, () => {
-  drawer.value = false;
-});
-
-const submitSearchQuery = () => {
-  loading.value = true;
-
-  setTimeout(() => {
-    loading.value = false;
-    loaded.value = true;
-    console.log(searchQuery.value);
-  }, 2000);
-};
-
-const toggleLogin = () => {
-  isLogin.value = !isLogin.value;
-};
-
-const toggleLogout = () => {
-  isLogin.value = !isLogin.value;
-};
 </script>
 
-<style scoped lang="scss">
-.list-item {
-  display: flex;
-  align-items: center; // Ensure items are centered vertically
-  justify-content: center;
-
-  v-icon {
-    margin-right: 8px; // Adjust the spacing between icon and title
-    font-size: 24px; // Adjust icon size if necessary
-  }
-}
-</style>
+<style scoped lang="scss"></style>

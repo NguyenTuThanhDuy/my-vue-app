@@ -5,7 +5,12 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --fix --ignore-path .gitignore"
+    "lint": "eslint . --fix --ignore-path .gitignore",
+    "format": "prettier --write .",
+    "test": "npm run test:integration && npm run test:show-report",
+    "test:integration": "playwright test",
+    "test:head": "playwright test --headed",
+    "test:show-report": "playwright show-report"
   },
   "dependencies": {
     "@mdi/font": "6.2.95",
@@ -16,6 +21,7 @@
   },
   "devDependencies": {
     "@babel/types": "^7.24.0",
+    "@playwright/test": "^1.46.0",
     "@types/node": "^20.11.25",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/eslint-config-typescript": "^13.0.0",
@@ -27,6 +33,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.22.0",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "sass": "^1.71.1",
     "typescript": "^5.4.2",
     "unplugin-auto-import": "^0.17.5",

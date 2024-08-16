@@ -24,6 +24,7 @@
       @scroll="handleScroll"
       class="scroll-area"
       elevation="2"
+      data-testid="test-scroll-area"
     >
       <v-sheet
         v-for="item in items"
@@ -43,6 +44,15 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
+
+const authStore = useAuthStore();
+const userInfo = authStore.getUserInfo();
+authStore.setUserInfo({
+  id: "123abc",
+  name: "Duy",
+  token: "123456789",
+});
 
 const step = ref(1);
 const urlHash = ref(null);
@@ -105,6 +115,7 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   margin-right: 20px;
+  height: 800px;
 }
 
 .stepper {
@@ -113,15 +124,14 @@ onMounted(() => {
 
 .scroll-area {
   flex: 1;
-  max-height: 750px;
+  max-height: 800px;
   overflow-y: auto;
   border: 1px solid #ddd;
-  padding: 10px;
 }
 
 .scroll-section {
-  height: 750px;
+  height: 800px;
   border-bottom: 1px solid #ddd;
-  padding: 20px;
+  max-height: 800px;
 }
 </style>
