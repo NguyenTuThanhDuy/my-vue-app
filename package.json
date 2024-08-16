@@ -2,7 +2,7 @@
   "name": "my-vue-app",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite --host=0.0.0.0 --port=80",
+    "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
     "lint": "eslint . --fix --ignore-path .gitignore",
