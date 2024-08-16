@@ -1,6 +1,11 @@
 <template>
   <v-layout class="overflow-visible" style="height: 56px">
-    <v-bottom-navigation v-model="value" :bg-color="color" mode="shift">
+    <v-bottom-navigation
+      v-model="value"
+      background-color="teal darken-4"
+      image="https://picsum.photos/1920/1080?random"
+      class="custom-bottom-navigation"
+    >
       <v-btn
         v-for="(socialLink, index) in socialLinks"
         :key="socialLink.label"
@@ -68,5 +73,13 @@ const color = computed(() => {
 
 .align-center {
   justify-content: center;
+}
+.custom-bottom-navigation {
+  position: relative;
+  background-image: linear-gradient(
+    to top right,
+    rgba(19, 84, 122, 0.8),
+    rgba(128, 208, 199, 0.8)
+  );
 }
 </style>

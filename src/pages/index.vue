@@ -1,7 +1,7 @@
 <template>
   <Suspense>
     <template #default>
-      <HelloWorld />
+      <Homepage />
     </template>
     <template #fallback>
       <Loading />
@@ -13,7 +13,7 @@
 import { defineAsyncComponent } from "vue";
 
 // Lazy load the HelloWorld component
-const HelloWorld = defineAsyncComponent(
+const Homepage = defineAsyncComponent(
   () => import("../components/HelloWorld.vue")
 );
 </script>

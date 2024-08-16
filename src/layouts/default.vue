@@ -2,7 +2,7 @@
   <v-app>
     <AppHeader />
     <Breadcrumb />
-    <v-main max-height="800px">
+    <v-main>
       <router-view />
     </v-main>
     <AppFooter />

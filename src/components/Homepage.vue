@@ -114,7 +114,7 @@ onMounted(() => {
 .stepper-container {
   display: flex;
   flex-direction: column;
-  margin-right: 20px;
+  margin-right: 5px;
   height: 800px;
 }
 

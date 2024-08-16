@@ -95,8 +95,6 @@ const router = createRouter({
     // Merge additional routes into extended routes
     mergeMetaIntoRoutes(extendedRoutes, additionalRoutes);
 
-    console.log(extendedRoutes); // Debugging: Check final routes with meta
-
     return extendedRoutes;
   },
 });
