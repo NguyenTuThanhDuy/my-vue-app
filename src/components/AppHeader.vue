@@ -3,6 +3,7 @@
     color="teal-darken-4"
     image="https://picsum.photos/1920/1080?random"
     prominent
+    :elevation="2"
   >
     <template v-slot:image>
       <v-img
@@ -15,9 +16,11 @@
       @click.stop="drawer = !drawer"
     ></v-app-bar-nav-icon>
 
-    <v-app-bar-title data-testid="test-toolbar-title"
-      >My Profile</v-app-bar-title
-    >
+    <v-btn @click="moveToProfile" density="comfortable">
+      <v-app-bar-title data-testid="test-toolbar-title"
+        >LittleSnowWhite</v-app-bar-title
+      >
+    </v-btn>
 
     <v-spacer></v-spacer>
 
@@ -93,6 +96,8 @@ const items = [
     route: "/donate",
   },
 ];
+
+const moveToProfile = () => window.open("/profile", "_self");
 </script>
 
 <style scoped lang="scss"></style>

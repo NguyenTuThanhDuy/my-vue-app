@@ -1,8 +1,8 @@
 <template>
-  <v-container>
+  <v-sheet>
     <h1>Test</h1>
     <div>Profile Page</div>
-  </v-container>
+  </v-sheet>
 </template>
 
 <script lang="ts" setup></script>
