@@ -62,8 +62,8 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
-  server: {
-    port: 80,
-    host: "0.0.0.0",
-  },
+  // server: {
+  //   port: 80,
+  //   host: "0.0.0.0",
+  // },
 });

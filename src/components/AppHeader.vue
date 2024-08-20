@@ -16,13 +16,25 @@
       @click.stop="drawer = !drawer"
     ></v-app-bar-nav-icon>
 
-    <v-btn @click="moveToProfile" density="comfortable">
+    <v-btn to="/profile">
       <v-app-bar-title data-testid="test-toolbar-title"
         >LittleSnowWhite</v-app-bar-title
       >
     </v-btn>
 
     <v-spacer></v-spacer>
+
+    <v-avatar>
+      <v-img
+        src="https://lh4.googleusercontent.com/proxy/iCw4ggSAAEb40kANm7DsrhgAQ4JNjw2vD4sSGfsPV9Pvf7Y004lIjgVRP_8iPpszRlqwWgNuZU7YCw1bMirflc9jHjqdvxs1X3ivxwMI"
+      ></v-img>
+    </v-avatar>
+
+    <v-btn icon @click="toggleTheme">
+      <v-icon>{{
+        isDarkTheme ? "mdi-brightness-7" : "mdi-brightness-4"
+      }}</v-icon>
+    </v-btn>
 
     <v-btn icon>
       <v-icon>mdi-magnify</v-icon>
@@ -39,7 +51,6 @@
 
   <v-navigation-drawer
     v-model="drawer"
-    :location="$vuetify.display.mobile ? 'bottom' : undefined"
     temporary
     color="teal-darken-4"
     image="https://picsum.photos/1920/1080?random"
@@ -67,6 +78,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useTheme } from "vuetify";
 
 const isLogin = ref(false);
 const drawer = ref(false);
@@ -97,7 +109,12 @@ const items = [
   },
 ];
 
-const moveToProfile = () => window.open("/profile", "_self");
+const theme = useTheme();
+const isDarkTheme = computed(() => theme.global.current.value.dark);
+
+const toggleTheme = () => {
+  theme.global.name.value = isDarkTheme.value ? "light" : "dark";
+};
 </script>
 
 <style scoped lang="scss"></style>

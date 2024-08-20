@@ -44,6 +44,9 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useQuery } from "@tanstack/vue-query";
+
+import axiosInstance from "@/hooks/axios";
 import { useAuthStore } from "@/stores/authStore";
 
 const authStore = useAuthStore();
@@ -103,6 +106,19 @@ onMounted(() => {
     }
   }
 });
+
+// Define a function to fetch data using Axios
+const fetchData = async () => {
+  const { data } = await axiosInstance.get("/items"); // Replace with your API endpoint
+  return data;
+};
+
+// Use TanStack Query's `useQuery` hook to fetch data
+const { data, isLoading, isError, error } = useQuery({
+  queryKey: ["items"], // Unique key to identify the query
+  queryFn: fetchData, // Function to fetch the data
+});
+console.log(data);
 </script>
 
 <style scoped lang="scss">
@@ -114,8 +130,9 @@ onMounted(() => {
 .stepper-container {
   display: flex;
   flex-direction: column;
-  margin-right: 5px;
   height: 800px;
+  border: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
 }
 
 .stepper {

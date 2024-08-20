@@ -1,8 +1,8 @@
 <template>
-  <v-layout class="overflow-visible" style="height: 56px">
+  <v-layout class="overflow-visible" style="height: 56px" :elavation="2">
     <v-bottom-navigation
       v-model="value"
-      background-color="teal darken-4"
+      background-color="teal-darken-4"
       image="https://picsum.photos/1920/1080?random"
       class="custom-bottom-navigation"
     >
