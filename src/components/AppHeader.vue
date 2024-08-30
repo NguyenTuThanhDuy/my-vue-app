@@ -2,7 +2,6 @@
   <v-app-bar
     color="teal-darken-4"
     image="https://picsum.photos/1920/1080?random"
-    prominent
     :elevation="2"
   >
     <template v-slot:image>
@@ -18,7 +17,7 @@
 
     <v-btn to="/profile">
       <v-app-bar-title data-testid="test-toolbar-title"
-        >LittleSnowWhite</v-app-bar-title
+        >小白雪公主</v-app-bar-title
       >
     </v-btn>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-sheet class="flex-container">
+  <v-sheet class="flex-container" v-if="!isLoading && !isError">
     <v-sheet class="stepper-container" elevation="2">
       <v-stepper v-model="step" vertical class="stepper">
         <v-stepper-header class="stepper-container">
@@ -27,55 +27,85 @@
       data-testid="test-scroll-area"
     >
       <v-sheet
-        v-for="item in items"
+        v-for="item in videos"
         :key="item.id"
         :id="item.id"
         class="scroll-section"
       >
         <v-card>
           <v-card-title>{{ item.title }}</v-card-title>
-          <v-card-text>{{ item.content }}</v-card-text>
+          <v-card-text>
+            <a href="{{item.videoUrl}}">
+              {{ item.videoUrl }}
+            </a>
+          </v-card-text>
         </v-card>
       </v-sheet>
     </v-sheet>
   </v-sheet>
+  <v-sheet v-if="isLoading">
+    <Loading />
+  </v-sheet>
+  <v-sheet v-if="isError">
+    <ForbiddenError :error="{ error }" />
+  </v-sheet>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useQuery } from "@tanstack/vue-query";
-
+import { useQuery, keepPreviousData } from "@tanstack/vue-query";
 import axiosInstance from "@/hooks/axios";
 import { useAuthStore } from "@/stores/authStore";
+import { Ref } from "vue";
+import ForbiddenError from "./ForbiddenError.vue";
+interface Item {
+  id: string;
+  title: string;
+  content: string;
+}
 
+interface UserInfo {
+  id: string;
+  name: string;
+  token: string;
+}
+
+interface Video {
+  // Define the structure of video data here if known
+  [key: string]: any; // This can be replaced with specific fields
+}
+
+// Setup store and user information
 const authStore = useAuthStore();
-const userInfo = authStore.getUserInfo();
+const userInfo: UserInfo = authStore.getUserInfo();
 authStore.setUserInfo({
   id: "123abc",
   name: "Duy",
   token: "123456789",
 });
 
-const step = ref(1);
-const urlHash = ref(null);
-const scrollArea = ref(null);
+const step: Ref<number> = ref(1);
+const urlHash: Ref<string | null> = ref(null);
+const scrollArea: Ref<any> = ref(null); // You might want to specify a more accurate type
 const route = useRoute();
 const router = useRouter();
 
 const handleScroll = () => {
-  const sections = scrollArea.value.$el.children;
-  const scrollTop = scrollArea.value.$el.scrollTop;
-  const sectionHeight = sections[0].offsetHeight;
-  const newStep = Math.min(
-    Math.floor(scrollTop / sectionHeight) + 1,
-    sections.length
-  );
-  urlHash.value = items[newStep - 1].id;
-  step.value = newStep;
+  if (scrollArea.value?.$el) {
+    const sections = scrollArea.value.$el.children;
+    const scrollTop = scrollArea.value.$el.scrollTop;
+    const sectionHeight = sections[0].offsetHeight;
+    const newStep = Math.min(
+      Math.floor(scrollTop / sectionHeight) + 1,
+      sections.length
+    );
+    urlHash.value = items[newStep - 1].id;
+    step.value = newStep;
+  }
 };
 
-const scrollToSection = (sectionId) => {
+const scrollToSection = (sectionId: string) => {
   const section = document.querySelector(`#${sectionId}`);
   if (section) {
     section.scrollIntoView({ behavior: "smooth" });
@@ -83,7 +113,7 @@ const scrollToSection = (sectionId) => {
   }
 };
 
-const items = [
+const items: Item[] = [
   { id: "summary", title: "Summary", content: "Content 1" },
   { id: "experience", title: "Experiences", content: "Content 2" },
   { id: "education", title: "Education", content: "Content 3" },
@@ -108,17 +138,22 @@ onMounted(() => {
 });
 
 // Define a function to fetch data using Axios
-const fetchData = async () => {
-  const { data } = await axiosInstance.get("/items"); // Replace with your API endpoint
-  return data;
+const fetchData = async (): Promise<Video[]> => {
+  console.log("Fetching data...");
+  const { data } = await axiosInstance.get("/videos"); // Replace with your API endpoint
+  return data?.videos;
 };
 
-// Use TanStack Query's `useQuery` hook to fetch data
-const { data, isLoading, isError, error } = useQuery({
-  queryKey: ["items"], // Unique key to identify the query
+const {
+  data: videos,
+  isLoading,
+  isError,
+  error,
+} = useQuery({
+  queryKey: ["videos"], // Unique key to identify the query
   queryFn: fetchData, // Function to fetch the data
+  placeholderData: keepPreviousData,
 });
-console.log(data);
 </script>
 
 <style scoped lang="scss">
@@ -130,9 +165,7 @@ console.log(data);
 .stepper-container {
   display: flex;
   flex-direction: column;
-  height: 800px;
-  border: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
+  height: 810px;
 }
 
 .stepper {
@@ -141,14 +174,13 @@ console.log(data);
 
 .scroll-area {
   flex: 1;
-  max-height: 800px;
+  max-height: 810px;
+  height: 810px;
   overflow-y: auto;
-  border: 1px solid #ddd;
 }
 
 .scroll-section {
-  height: 800px;
-  border-bottom: 1px solid #ddd;
-  max-height: 800px;
+  height: 810px;
+  max-height: 810px;
 }
 </style>

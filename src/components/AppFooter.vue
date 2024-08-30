@@ -1,22 +1,20 @@
 <template>
-  <v-layout class="overflow-visible" style="height: 56px" :elavation="2">
-    <v-bottom-navigation
-      v-model="value"
-      background-color="teal-darken-4"
-      image="https://picsum.photos/1920/1080?random"
-      class="custom-bottom-navigation"
+  <v-bottom-navigation
+    v-model="value"
+    background-color="teal-darken-4"
+    image="https://picsum.photos/1920/1080?random"
+    class="custom-bottom-navigation"
+  >
+    <v-btn
+      v-for="(socialLink, index) in socialLinks"
+      :key="socialLink.label"
+      @click="changeValue(index, socialLink.link)"
     >
-      <v-btn
-        v-for="(socialLink, index) in socialLinks"
-        :key="socialLink.label"
-        @click="changeValue(index, socialLink.link)"
-      >
-        <v-icon>{{ socialLink.icon }}</v-icon>
+      <v-icon>{{ socialLink.icon }}</v-icon>
 
-        <span>{{ socialLink.label }}</span>
-      </v-btn>
-    </v-bottom-navigation>
-  </v-layout>
+      <span>{{ socialLink.label }}</span>
+    </v-btn>
+  </v-bottom-navigation>
 </template>
 
 <script setup lang="ts">

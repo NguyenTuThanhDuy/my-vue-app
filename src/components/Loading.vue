@@ -1,17 +1,40 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-col cols="12" class="text-center">
-        <v-progress-circular
-          indeterminate
-          color="primary"
-        ></v-progress-circular>
-        <div>Loading...</div>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div class="text-center">
+    <v-progress-circular
+      :model-value="value"
+      :rotate="360"
+      :size="300"
+      :width="15"
+      color="teal"
+    >
+      <template v-slot:default> {{ value }} % </template>
+    </v-progress-circular>
+  </div>
 </template>
 
-<script lang="ts" setup>
-import { VContainer, VRow, VCol, VProgressCircular } from "vuetify/components";
+<script>
+export default {
+  data() {
+    return {
+      interval: -1,
+      value: 0,
+    };
+  },
+  mounted() {
+    this.interval = setInterval(() => {
+      if (this.value === 100) {
+        return (this.value = 0);
+      }
+      this.value += 10;
+    }, 1000);
+  },
+  beforeUnmount() {
+    clearInterval(this.interval);
+  },
+};
 </script>
+<style scoped>
+.v-progress-circular {
+  margin: 1rem;
+}
+</style>

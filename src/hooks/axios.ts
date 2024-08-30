@@ -1,8 +1,7 @@
 // axiosInstance.js or api.js
 import axios from "axios";
-
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8000/api/v1/", // Replace with your API base URL
+  baseURL: import.meta.env.VITE_API_URL, // Replace with your API base URL
   withCredentials: true,
   headers: {
     "Content-Type": "application/json",
@@ -28,12 +27,23 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Handle errors, such as token expiration, etc.
-    if (error.response && error.response.status === 401) {
-      // Handle unauthorized errors, maybe redirect to login
-      console.log("Unauthorized, logging out...");
-      localStorage.removeItem("authToken");
-      window.location.href = "/login";
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          // Handle unauthorized error
+          console.log("Unauthorized, logging out...");
+          localStorage.removeItem("authToken");
+          window.location.href = "/";
+          break;
+        case 404:
+          console.log("Resource not found");
+          break;
+        case 500:
+          console.log("Server error");
+          break;
+        default:
+          console.log("An error occurred");
+      }
     }
     return Promise.reject(error);
   }
