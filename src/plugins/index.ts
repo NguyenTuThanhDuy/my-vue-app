@@ -10,6 +10,7 @@ import pinia from "../stores";
 import router from "../router";
 
 import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

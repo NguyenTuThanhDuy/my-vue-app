@@ -45,7 +45,7 @@ const socialLinks = [
 const value = ref(1);
 const changeValue = (index: number, link: string) => {
   value.value = index;
-  const link_window = window.open(link, "_blank");
+  window.open(link, "_blank");
 };
 
 const color = computed(() => {

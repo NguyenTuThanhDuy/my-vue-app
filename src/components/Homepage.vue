@@ -27,7 +27,7 @@
       data-testid="test-scroll-area"
     >
       <v-sheet
-        v-for="item in videos"
+        v-for="item in items"
         :key="item.id"
         :id="item.id"
         class="scroll-section"
@@ -35,14 +35,22 @@
         <v-card>
           <v-card-title>{{ item.title }}</v-card-title>
           <v-card-text>
-            <a href="{{item.videoUrl}}">
-              {{ item.videoUrl }}
-            </a>
+            {{ item.content }}
           </v-card-text>
+          <v-btn
+            prepend-icon="mdi-information"
+            varient="outlined"
+            @click="openModal(item.title)"
+            >More Details</v-btn
+          >
         </v-card>
       </v-sheet>
     </v-sheet>
   </v-sheet>
+  <ModalComponent v-model="show">
+    <Education :title="modalTitle" />
+  </ModalComponent>
+
   <v-sheet v-if="isLoading">
     <Loading />
   </v-sheet>
@@ -54,43 +62,61 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { useQuery, keepPreviousData } from "@tanstack/vue-query";
-import axiosInstance from "@/hooks/axios";
-import { useAuthStore } from "@/stores/authStore";
+// import { useQuery, keepPreviousData } from "@tanstack/vue-query";
+// import axiosInstance from "@/hooks/axios";
+// import { useAuthStore } from "@/stores/authStore";
 import { Ref } from "vue";
 import ForbiddenError from "./ForbiddenError.vue";
+import Education from "@/modals/Education.vue";
+
 interface Item {
   id: string;
   title: string;
   content: string;
 }
 
-interface UserInfo {
-  id: string;
-  name: string;
-  token: string;
-}
+// interface UserInfo {
+//   id: string;
+//   name: string;
+//   token: string;
+// }
 
-interface Video {
-  // Define the structure of video data here if known
-  [key: string]: any; // This can be replaced with specific fields
-}
+// interface Video {
+//   // Define the structure of video data here if known
+//   id: string;
+//   title: string;
+//   channel: object;
+//   views: number;
+//   postedAt: string;
+//   duration: number;
+//   thumbnailUrl: string;
+//   videoUrl: string;
+// }
 
 // Setup store and user information
-const authStore = useAuthStore();
-const userInfo: UserInfo = authStore.getUserInfo();
-authStore.setUserInfo({
-  id: "123abc",
-  name: "Duy",
-  token: "123456789",
-});
+// const authStore = useAuthStore();
+// const userInfo: UserInfo = authStore.getUserInfo();
+// authStore.setUserInfo({
+//   id: "123abc",
+//   name: "Duy",
+//   token: "123456789",
+// });
 
 const step: Ref<number> = ref(1);
 const urlHash: Ref<string | null> = ref(null);
 const scrollArea: Ref<any> = ref(null); // You might want to specify a more accurate type
 const route = useRoute();
 const router = useRouter();
+const show: Ref<boolean> = ref(false);
+const modalTitle: Ref<string> = ref("");
+const isLoading: Ref<boolean> = ref(false);
+const isError: Ref<boolean> = ref(false);
+const error: Ref<string> = ref("Unknown Error");
 
+const openModal = (title: string) => {
+  show.value = true;
+  modalTitle.value = title;
+};
 const handleScroll = () => {
   if (scrollArea.value?.$el) {
     const sections = scrollArea.value.$el.children;
@@ -138,22 +164,23 @@ onMounted(() => {
 });
 
 // Define a function to fetch data using Axios
-const fetchData = async (): Promise<Video[]> => {
-  console.log("Fetching data...");
-  const { data } = await axiosInstance.get("/videos"); // Replace with your API endpoint
-  return data?.videos;
-};
+// const fetchData = async (): Promise<Video[]> => {
+//   console.log("Fetching data...");
+//   const { data } = await axiosInstance.get("/videos"); // Replace with your API endpoint
+//   return data.videos;
+// };
 
-const {
-  data: videos,
-  isLoading,
-  isError,
-  error,
-} = useQuery({
-  queryKey: ["videos"], // Unique key to identify the query
-  queryFn: fetchData, // Function to fetch the data
-  placeholderData: keepPreviousData,
-});
+// const {
+//   data: videos,
+//   isLoading,
+//   isError,
+//   error,
+// } = useQuery({
+//   queryKey: ["videos"], // Unique key to identify the query
+//   queryFn: fetchData, // Function to fetch the data
+//   placeholderData: keepPreviousData,
+// });
+//
 </script>
 
 <style scoped lang="scss">

@@ -13,6 +13,7 @@ declare module 'vue' {
     ForbiddenError: typeof import('./components/ForbiddenError.vue')['default']
     Homepage: typeof import('./components/Homepage.vue')['default']
     Loading: typeof import('./components/Loading.vue')['default']
+    ModalComponent: typeof import('./components/ModalComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }
