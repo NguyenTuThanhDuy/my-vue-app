@@ -10,6 +10,8 @@ import pinia from "../stores";
 import router from "../router";
 
 import { VueQueryPlugin, QueryClient } from "@tanstack/vue-query";
+import PrimeVue from "primevue/config";
+import Aura from "@primevue/themes/aura";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,5 +28,14 @@ const queryClient = new QueryClient({
 import type { App } from "vue";
 
 export function registerPlugins(app: App) {
-  app.use(vuetify).use(router).use(pinia).use(VueQueryPlugin, { queryClient });
+  app
+    .use(vuetify)
+    .use(router)
+    .use(pinia)
+    .use(VueQueryPlugin, { queryClient })
+    .use(PrimeVue, {
+      theme: {
+        preset: Aura,
+      },
+    });
 }
