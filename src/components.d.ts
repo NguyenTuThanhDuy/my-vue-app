@@ -5,16 +5,16 @@
 // Read more: https://github.com/vuejs/core/pull/3399
 export {}
 
-declare module 'vue' {
+declare module "vue" {
   export interface GlobalComponents {
-    AppFooter: typeof import('./components/AppFooter.vue')['default']
-    AppHeader: typeof import('./components/AppHeader.vue')['default']
-    Breadcrumb: typeof import('./components/Breadcrumb.vue')['default']
-    ForbiddenError: typeof import('./components/ForbiddenError.vue')['default']
-    Homepage: typeof import('./components/Homepage.vue')['default']
-    Loading: typeof import('./components/Loading.vue')['default']
-    ModalComponent: typeof import('./components/ModalComponent.vue')['default']
-    RouterLink: typeof import('vue-router')['RouterLink']
-    RouterView: typeof import('vue-router')['RouterView']
+    AppFooter: typeof import("./components/AppFooter.vue")["default"];
+    AppHeader: typeof import("./components/AppHeader.vue")["default"];
+    Breadcrumb: typeof import("./components/Breadcrumb.vue")["default"];
+    ForbiddenError: typeof import("./components/ForbiddenError.vue")["default"];
+    Homepage: typeof import("./components/Homepage.vue")["default"];
+    Loading: typeof import("./components/Loading.vue")["default"];
+    ModalComponent: typeof import("./components/ModalComponent.vue")["default"];
+    RouterLink: typeof import("vue-router")["RouterLink"];
+    RouterView: typeof import("vue-router")["RouterView"];
   }
 }

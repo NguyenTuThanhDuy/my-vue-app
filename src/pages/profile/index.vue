@@ -2,16 +2,32 @@
   <v-sheet>
     <h1>Test</h1>
     <div>Profile Page</div>
-    <div>
-      <QuillEditor v-model:content="content" contentType="text" theme="snow" />
-      <v-btn @click="btnSubmit">Send</v-btn>
-    </div>
+    <div ref="editorContainer" class="editor"></div>
+    <v-btn @click="submitBtn">Submit</v-btn>
   </v-sheet>
 </template>
 
-<script lang="ts" setup>
-const content = ref("");
-const btnSubmit = () => console.log(content.value);
+<script setup>
+import globalOptions from "@/configs/quillConfig";
+import { Quill } from "@vueup/vue-quill";
+import { ref, onMounted } from "vue";
+
+const editorContainer = ref(null);
+let quill;
+onMounted(() => {
+  quill = new Quill(editorContainer.value, globalOptions);
+});
+
+function submitBtn() {
+  console.log(quill.getText());
+  if (quill) {
+    quill.setText(""); // This sets the editor's content to an empty string
+  }
+}
 </script>
 
-<style scoped lang="scss"></style>
+<style>
+.editor {
+  height: 300px;
+}
+</style>
