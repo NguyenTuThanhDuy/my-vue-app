@@ -16,5 +16,6 @@ declare module 'vue' {
     ModalComponent: typeof import('./components/ModalComponent.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    VideoGridItem: typeof import('./components/VideoGridItem.vue')['default']
   }
 }

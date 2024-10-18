@@ -2,15 +2,15 @@
 import { defineStore } from "pinia";
 type UserInfo = {
   id: string;
-  name: string;
-  token: string;
+  access_token: string;
+  refresh_token: string;
 };
 export const useAuthStore = defineStore("user", {
   state: () => ({
     user_info: {
       id: "",
-      name: "",
-      token: "",
+      access_token: "",
+      refresh_token: "",
     },
   }),
   actions: {
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore("user", {
     },
   },
   persist: {
-    storage: localStorage,
+    storage: sessionStorage,
     key: "userInfo",
     serializer: {
       // Called before storing the state

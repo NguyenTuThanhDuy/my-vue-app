@@ -46,6 +46,21 @@
     <v-btn icon>
       <v-icon>mdi-dots-vertical</v-icon>
     </v-btn>
+
+    <v-btn @click="() => router.push('login')" v-if="!isLogin">
+      <v-icon>mdi-login</v-icon>
+      <p>Login</p>
+    </v-btn>
+
+    <v-btn @click="() => router.push('signup')">
+      <v-icon>mdi-account-plus</v-icon>
+      <p>Sign Up</p>
+    </v-btn>
+
+    <v-btn @click="handleLogout" v-if="isLogin">
+      <v-icon>mdi-logout</v-icon>
+      <p>Logout</p>
+    </v-btn>
   </v-app-bar>
 
   <v-navigation-drawer
@@ -76,10 +91,14 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useTheme } from "vuetify";
+import { useRouter } from "vue-router";
+import { isAuthenticated } from "@/utils/isAuthenticated";
+import { deleteCookie } from "@/utils/deleteCookie";
 
-const isLogin = ref(false);
+const router = useRouter();
+const isLogin = ref(isAuthenticated());
 const drawer = ref(false);
 const items = [
   {
@@ -106,8 +125,19 @@ const items = [
     value: "donate",
     route: "/donate",
   },
+  {
+    icon: "mdi-video",
+    title: "Video",
+    value: "video",
+    route: "/video",
+  },
 ];
 
+const handleLogout = () => {
+  deleteCookie("access_token");
+  sessionStorage.removeItem("userInfo");
+  isLogin.value = false;
+};
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);
 

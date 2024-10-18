@@ -5,7 +5,11 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from "vue-router/auto";
+import {
+  createRouter,
+  createWebHistory,
+  RouteRecordRaw,
+} from "vue-router/auto";
 import { setupLayouts } from "virtual:generated-layouts";
 
 import Homepage from "@/pages/index.vue";
@@ -13,8 +17,12 @@ import NotFound from "../pages/NotFound.vue";
 import Profile from "../pages/profile/index.vue";
 import Contact from "../pages/contact/index.vue";
 import Education from "../pages/education/index.vue";
+import SignUp from "../pages/signup/index.vue";
+import Login from "../pages/login/index.vue";
+import Video from "../pages/video/index.vue";
+import { isAuthenticated } from "@/utils/isAuthenticated";
 
-const additionalRoutes = [
+const additionalRoutes: Array<RouteRecordRaw> = [
   {
     path: "/:catchAll(.*)*", // Catch-all route for 404
     name: "NotFound",
@@ -66,6 +74,51 @@ const additionalRoutes = [
           breadCrumb: "education",
           parent: "home",
         },
+      },
+      {
+        path: "signup",
+        name: "signup",
+        component: SignUp,
+        meta: {
+          breadCrumb: "signup",
+          parent: "home",
+        },
+      },
+      {
+        path: "login",
+        name: "login",
+        component: Login,
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            // If the user is already logged in, redirect to the homepage
+            next("/");
+          } else {
+            // Otherwise, allow access to the login page
+            next();
+          }
+        },
+        meta: {
+          breadCrumb: "login",
+          parent: "home",
+        },
+      },
+      {
+        path: "video",
+        name: "video",
+        component: Video,
+        // beforeEnter: (to, from, next) => {
+        //   if (isAuthenticated()) {
+        //     // If the user is already logged in, redirect to the video page
+        //     next(to);
+        //   } else {
+        //     // Otherwise, allow access
+        //     next("/login");
+        //   }
+        // },
+        // meta: {
+        //   breadCrumb: "video",
+        //   parent: "home",
+        // },
       },
     ],
   },

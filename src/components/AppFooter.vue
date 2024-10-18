@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 const socialLinks = [
   {
@@ -48,20 +48,20 @@ const changeValue = (index: number, link: string) => {
   window.open(link, "_blank");
 };
 
-const color = computed(() => {
-  switch (value.value) {
-    case 0:
-      return "blue-grey";
-    case 1:
-      return "teal";
-    case 2:
-      return "brown";
-    case 3:
-      return "indigo";
-    default:
-      return "blue-grey";
-  }
-});
+// const color = computed(() => {
+//   switch (value.value) {
+//     case 0:
+//       return "blue-grey";
+//     case 1:
+//       return "teal";
+//     case 2:
+//       return "brown";
+//     case 3:
+//       return "indigo";
+//     default:
+//       return "blue-grey";
+//   }
+// });
 </script>
 
 <style scoped>
