@@ -39,7 +39,7 @@
             ></v-text-field>
 
             <!-- Acceptance Checkbox -->
-            <v-row justify="space-between" class="my-4">
+            <v-row justify="space-between" class="">
               <v-checkbox
                 v-model="formData.isAccepted"
                 label="I accept the Terms and Conditions"
@@ -48,7 +48,9 @@
             </v-row>
 
             <!-- Submit Button -->
-            <v-btn type="submit" color="primary" block>Sign up</v-btn>
+            <v-btn type="submit" color="primary" block :disabled="!isError"
+              >Sign up</v-btn
+            >
 
             <!-- Login link -->
             <v-row justify="center" class="mt-4">
@@ -65,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import axiosInstance from "@/services/axios";
 import useRoutes from "@/hooks/routes";
@@ -73,6 +75,7 @@ import { AxiosError } from "axios";
 
 // Initialize router
 const router = useRouter();
+let isError = false;
 
 // Reactive form data
 const formData = ref({
@@ -86,15 +89,28 @@ const formData = ref({
 const routes = useRoutes();
 const url = routes.URLs.SIGNUP_URL();
 
+watch(formData.value, async (newData, oldData) => {
+  if (
+    newData.password !== newData.confirmPassword ||
+    newData.password === "" ||
+    newData.confirmPassword === "" ||
+    !newData.isAccepted
+  ) {
+    isError = true;
+  } else {
+    isError = false;
+  }
+});
 // Form submit handler
 const handleSubmit = async () => {
   const { email, password, confirmPassword, isAccepted } = formData.value;
 
   // Basic validation
   if (password !== confirmPassword || !isAccepted) {
-    alert("Passwords do not match or Terms not accepted");
+    isError = true;
     return;
   }
+  isError = false;
 
   try {
     const data = {

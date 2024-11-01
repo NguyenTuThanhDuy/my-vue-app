@@ -36,6 +36,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.22.0",
+    "firebase": "^11.0.1",
     "highlight.js": "^11.10.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
