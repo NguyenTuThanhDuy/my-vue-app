@@ -62,6 +62,9 @@ export default defineConfig({
     },
     extensions: [".js", ".json", ".jsx", ".mjs", ".ts", ".tsx", ".vue"],
   },
+  optimizeDeps: {
+    exclude: ["vuetify"], // Exclude Vuetify if needed to prevent HMR issues
+  },
   // server: {
   //   port: 80,
   //   host: "0.0.0.0",

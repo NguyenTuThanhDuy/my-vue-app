@@ -75,33 +75,6 @@ interface Item {
   content: string;
 }
 
-// interface UserInfo {
-//   id: string;
-//   name: string;
-//   token: string;
-// }
-
-// interface Video {
-//   // Define the structure of video data here if known
-//   id: string;
-//   title: string;
-//   channel: object;
-//   views: number;
-//   postedAt: string;
-//   duration: number;
-//   thumbnailUrl: string;
-//   videoUrl: string;
-// }
-
-// Setup store and user information
-// const authStore = useAuthStore();
-// const userInfo: UserInfo = authStore.getUserInfo();
-// authStore.setUserInfo({
-//   id: "123abc",
-//   name: "Duy",
-//   token: "123456789",
-// });
-
 const step: Ref<number> = ref(1);
 const urlHash: Ref<string | null> = ref(null);
 const scrollArea: Ref<any> = ref(null); // You might want to specify a more accurate type
@@ -162,25 +135,6 @@ onMounted(() => {
     }
   }
 });
-
-// Define a function to fetch data using Axios
-// const fetchData = async (): Promise<Video[]> => {
-//   console.log("Fetching data...");
-//   const { data } = await axiosInstance.get("/videos"); // Replace with your API endpoint
-//   return data.videos;
-// };
-
-// const {
-//   data: videos,
-//   isLoading,
-//   isError,
-//   error,
-// } = useQuery({
-//   queryKey: ["videos"], // Unique key to identify the query
-//   queryFn: fetchData, // Function to fetch the data
-//   placeholderData: keepPreviousData,
-// });
-//
 </script>
 
 <style scoped lang="scss">
