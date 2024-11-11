@@ -19,7 +19,6 @@ import Contact from "../pages/contact/index.vue";
 import Education from "../pages/education/index.vue";
 import SignUp from "../pages/signup/index.vue";
 import Login from "../pages/login/index.vue";
-import Video from "../pages/video/index.vue";
 import { isAuthenticated } from "@/utils/isAuthenticated";
 
 const additionalRoutes: Array<RouteRecordRaw> = [
@@ -101,24 +100,6 @@ const additionalRoutes: Array<RouteRecordRaw> = [
           breadCrumb: "login",
           parent: "home",
         },
-      },
-      {
-        path: "video",
-        name: "video",
-        component: Video,
-        // beforeEnter: (to, from, next) => {
-        //   if (isAuthenticated()) {
-        //     // If the user is already logged in, redirect to the video page
-        //     next(to);
-        //   } else {
-        //     // Otherwise, allow access
-        //     next("/login");
-        //   }
-        // },
-        // meta: {
-        //   breadCrumb: "video",
-        //   parent: "home",
-        // },
       },
     ],
   },

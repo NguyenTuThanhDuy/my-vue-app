@@ -15,6 +15,7 @@ function useRoutes() {
   // Define URLs as a const object to ensure type safety
   const URLs = {
     LOGIN_URL: () => `${baseUrl}/auth/login`,
+    REFRESH_URL: () => `${baseUrl}/auth/refresh`,
     SIGNUP_URL: () => `${baseUrl}/auth/signup`,
     VIDEO_URL: (params: { limit?: number; offset?: number }) =>
       `${baseUrl}/videos${buildQueryString(params)}`,

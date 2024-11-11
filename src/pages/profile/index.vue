@@ -1,33 +1,27 @@
 <template>
-  <v-sheet>
-    <h1>Test</h1>
-    <div>Profile Page</div>
-    <div ref="editorContainer" class="editor"></div>
-    <v-btn @click="submitBtn">Submit</v-btn>
-  </v-sheet>
+  <Suspense>
+    <template #default>
+      <Homepage />
+    </template>
+    <template #fallback>
+      <Loading />
+    </template>
+  </Suspense>
 </template>
 
-<script setup>
-import globalOptions from "@/configs/quillConfig";
-import { Quill } from "@vueup/vue-quill";
-import { ref, onMounted } from "vue";
+<script lang="ts" setup>
+import Loading from "@/components/Loading.vue";
+import { defineAsyncComponent } from "vue";
+import NotFound from "../NotFound.vue";
 
-const editorContainer = ref(null);
-let quill;
-onMounted(() => {
-  quill = new Quill(editorContainer.value, globalOptions);
+// Lazy load the Homepage component
+const Homepage = defineAsyncComponent({
+  loader: () => import("@/components/Homepage.vue"),
+  loadingComponent: Loading,
+  delay: 5000,
+  errorComponent: NotFound,
+  timeout: 10000,
 });
-
-function submitBtn() {
-  console.log(quill.getText());
-  if (quill) {
-    quill.setText(""); // This sets the editor's content to an empty string
-  }
-}
 </script>
 
-<style>
-.editor {
-  height: 300px;
-}
-</style>
+<style scoped lang="scss"></style>

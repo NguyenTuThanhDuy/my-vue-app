@@ -125,12 +125,6 @@ const items = [
     value: "donate",
     route: "/donate",
   },
-  {
-    icon: "mdi-video",
-    title: "Video",
-    value: "video",
-    route: "/video",
-  },
 ];
 
 const handleLogout = () => {
