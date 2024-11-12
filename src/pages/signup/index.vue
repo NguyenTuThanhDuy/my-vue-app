@@ -156,10 +156,8 @@ const handleSubmit = async () => {
   loading.value = true;
   try {
     const data = {
-      user_account: {
-        username: formData.value.email,
-        password: formData.value.password,
-      },
+      username: formData.value.email,
+      password: formData.value.password,
       firstname: "Duy",
       lastname: "Nguyen",
       date_of_birth: "01/10/1997",
