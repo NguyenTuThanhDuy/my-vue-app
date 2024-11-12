@@ -6,21 +6,27 @@
     <v-row justify="center">
       <v-col>
         <v-card class="pa-6" outlined>
-          <!-- Signup Icon -->
+          <!-- Signup Icon and Title -->
           <v-row class="d-flex justify-center">
             <h2>
               <v-icon large>mdi-account-plus</v-icon>
-              <v-label large>SignUp</v-label>
+              <span class="ml-2">Sign Up</span>
             </h2>
           </v-row>
 
           <!-- Form -->
-          <v-form @submit.prevent="handleSubmit">
+          <v-form
+            ref="signupForm"
+            v-model="formValid"
+            @submit.prevent="handleSubmit"
+          >
             <!-- Email Field -->
             <v-text-field
               label="Email"
               v-model="formData.email"
               type="email"
+              :error-messages="emailErrors"
+              :rules="[rules.required, rules.email]"
               required
             ></v-text-field>
 
@@ -29,6 +35,8 @@
               label="Password"
               v-model="formData.password"
               type="password"
+              :error-messages="passwordErrors"
+              :rules="[rules.required, rules.minLength]"
               required
             ></v-text-field>
 
@@ -37,22 +45,35 @@
               label="Confirm Password"
               v-model="formData.confirmPassword"
               type="password"
+              :error-messages="confirmPasswordErrors"
+              :rules="[rules.required, rules.passwordMatch]"
               required
             ></v-text-field>
 
             <!-- Acceptance Checkbox -->
-            <v-row justify="space-between" class="">
-              <v-checkbox
-                v-model="formData.isAccepted"
-                label="I accept the Terms and Conditions"
-                required
-              ></v-checkbox>
-            </v-row>
+            <v-checkbox
+              v-model="formData.isAccepted"
+              label="I accept the Terms and Conditions"
+              :error-messages="acceptanceErrors"
+              :rules="[rules.accepted]"
+              required
+            ></v-checkbox>
 
             <!-- Submit Button -->
-            <v-btn type="submit" color="primary" block :disabled="!isError"
-              >Sign up</v-btn
+            <v-btn
+              :loading="loading"
+              :disabled="!formValid || loading"
+              type="submit"
+              color="primary"
+              block
             >
+              <template v-if="!loading">Sign up</template>
+              <v-progress-circular
+                v-else
+                indeterminate
+                size="20"
+              ></v-progress-circular>
+            </v-btn>
 
             <!-- Login link -->
             <v-row justify="center" class="mt-4">
@@ -77,48 +98,67 @@ import { AxiosError } from "axios";
 
 // Initialize router
 const router = useRouter();
-let isError = false;
 
-// Reactive form data
+// Reactive form data and validation state
 const formData = ref({
   email: "",
   password: "",
   confirmPassword: "",
   isAccepted: false,
 });
+const loading = ref(false);
+const formValid = ref(false);
 
-// Get the signup URL from your route utilities
+// Validation rules
+const rules = {
+  required: (v: string) => !!v || "Field is required",
+  email: (v: string) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+  minLength: (v: string) =>
+    (v && v.length >= 6) || "Password must be at least 6 characters",
+  passwordMatch: () =>
+    formData.value.password === formData.value.confirmPassword ||
+    "Passwords must match",
+  accepted: (v: boolean) => v || "You must accept the Terms and Conditions",
+};
+
+// Error messages for validation
+const emailErrors = ref<string[]>([]);
+const passwordErrors = ref<string[]>([]);
+const confirmPasswordErrors = ref<string[]>([]);
+const acceptanceErrors = ref<string[]>([]);
+
+// Get the signup URL from routes
 const routes = useRoutes();
 const url = routes.URLs.SIGNUP_URL();
 
-watch(formData.value, async (newData, oldData) => {
-  if (
-    newData.password !== newData.confirmPassword ||
-    newData.password === "" ||
-    newData.confirmPassword === "" ||
-    !newData.isAccepted
-  ) {
-    isError = true;
-  } else {
-    isError = false;
-  }
-});
+// Watch form data to perform real-time validation
+watch(
+  () => formData.value,
+  () => {
+    emailErrors.value = [];
+    passwordErrors.value = [];
+    confirmPasswordErrors.value = [];
+    acceptanceErrors.value = [];
+
+    // Basic validation
+    if (!formData.value.isAccepted)
+      acceptanceErrors.value.push("You must accept the Terms and Conditions");
+    if (formData.value.password !== formData.value.confirmPassword)
+      confirmPasswordErrors.value.push("Passwords must match");
+  },
+  { deep: true }
+);
+
 // Form submit handler
 const handleSubmit = async () => {
-  const { email, password, confirmPassword, isAccepted } = formData.value;
+  if (!formValid.value) return;
 
-  // Basic validation
-  if (password !== confirmPassword || !isAccepted) {
-    isError = true;
-    return;
-  }
-  isError = false;
-
+  loading.value = true;
   try {
     const data = {
       user_account: {
-        username: email,
-        password: password,
+        username: formData.value.email,
+        password: formData.value.password,
       },
       firstname: "Duy",
       lastname: "Nguyen",
@@ -133,17 +173,25 @@ const handleSubmit = async () => {
     } else {
       console.log(response.status);
     }
-    // Redirect to the login page after successful signup
   } catch (error) {
-    if ((error as AxiosError).isAxiosError) {
+    if (error instanceof AxiosError && error.response) {
       console.error("Axios Error: ", (error as AxiosError).message);
+      emailErrors.value = [error.response.data.message || "An error occurred"];
     } else {
       console.error("Unknown Error: ", error);
+      emailErrors.value = ["An unexpected error occurred"];
     }
+  } finally {
+    loading.value = false;
   }
 };
 </script>
 
 <style scoped lang="scss">
-/* You can add your scoped styles here */
+.ml-2 {
+  margin-left: 8px;
+}
+.text-center {
+  text-align: center;
+}
 </style>
