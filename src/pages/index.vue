@@ -43,8 +43,8 @@ let totalPages = ref(5);
 let itemCount = ref(8);
 const pageSizeOptions = [4, 8, 24, 48];
 
-onMounted(() => {
-  fetchData(currentPage.value);
+onMounted(async () => {
+  await fetchData(currentPage.value);
 });
 
 const fetchData = async (page = 1) => {

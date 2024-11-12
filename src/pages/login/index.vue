@@ -7,9 +7,11 @@
       <v-col>
         <v-card class="pa-6" outlined>
           <!-- Login Icon -->
-          <v-row class="justify-center">
-            <v-icon large>mdi-login</v-icon>
-            <v-label text="Login"></v-label>
+          <v-row class="d-flex justify-center">
+            <h2>
+              <v-icon large>mdi-login</v-icon>
+              <v-label large text="Login"></v-label>
+            </h2>
           </v-row>
 
           <!-- Form -->
@@ -62,7 +64,7 @@ import { useAuthStore } from "@/stores/authStore";
 import { AxiosError } from "axios";
 
 // Access the user information store (pinia or other state management tool)
-const userInfo = useAuthStore();
+const authStore = useAuthStore();
 
 // Reactive form data
 const formData = ref({
@@ -79,16 +81,8 @@ const url = routes.URLs.LOGIN_URL();
 
 // Check if the user is already logged in
 onMounted(() => {
-  const user = sessionStorage.getItem("user");
-  if (user) {
-    const userObject = JSON.parse(user);
-    if (
-      Object.values(userObject).every(
-        (value) => value !== undefined && value !== null
-      )
-    ) {
-      router.replace("/");
-    }
+  if (authStore.isLogin) {
+    router.replace("/");
   }
 });
 
@@ -101,11 +95,11 @@ const handleSubmit = async () => {
     });
 
     // Update the user information in the store
-    userInfo.setUserInfo(response.data);
+    authStore.setUserInfo(response.data);
 
     // Redirect to the homepage after successful login
     router.push("/");
-    window.location.reload();
+    // window.location.reload();
   } catch (error) {
     if ((error as AxiosError).isAxiosError) {
       console.error("Axios Error: ", (error as AxiosError).message);

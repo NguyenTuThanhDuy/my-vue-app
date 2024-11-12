@@ -62,9 +62,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-// import { useQuery, keepPreviousData } from "@tanstack/vue-query";
-// import axiosInstance from "@/hooks/axios";
-// import { useAuthStore } from "@/stores/authStore";
 import { Ref } from "vue";
 import ForbiddenError from "./ForbiddenError.vue";
 import Education from "@/modals/Education.vue";

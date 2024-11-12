@@ -78,6 +78,15 @@ const additionalRoutes: Array<RouteRecordRaw> = [
         path: "signup",
         name: "signup",
         component: SignUp,
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            // If the user is already logged in, redirect to the homepage
+            next("/");
+          } else {
+            // Otherwise, allow access to the login page
+            next();
+          }
+        },
         meta: {
           breadCrumb: "signup",
           parent: "home",

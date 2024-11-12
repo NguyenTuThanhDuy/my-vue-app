@@ -47,17 +47,17 @@
       <v-icon>mdi-dots-vertical</v-icon>
     </v-btn>
 
-    <v-btn @click="() => router.push('login')" v-if="!isLogin">
+    <v-btn @click="() => router.push('login')" v-if="!authStore.isLogin">
       <v-icon>mdi-login</v-icon>
       <p>Login</p>
     </v-btn>
 
-    <v-btn @click="() => router.push('signup')">
+    <v-btn @click="() => router.push('signup')" v-if="!authStore.isLogin">
       <v-icon>mdi-account-plus</v-icon>
       <p>Sign Up</p>
     </v-btn>
 
-    <v-btn @click="handleLogout" v-if="isLogin">
+    <v-btn @click="handleLogout" v-if="authStore.isLogin">
       <v-icon>mdi-logout</v-icon>
       <p>Logout</p>
     </v-btn>
@@ -96,9 +96,10 @@ import { useTheme } from "vuetify";
 import { useRouter } from "vue-router";
 import { isAuthenticated } from "@/utils/isAuthenticated";
 import { deleteCookie } from "@/utils/deleteCookie";
+import { useAuthStore } from "@/stores/authStore";
 
 const router = useRouter();
-const isLogin = ref(isAuthenticated());
+const authStore = useAuthStore();
 const drawer = ref(false);
 const items = [
   {
@@ -128,9 +129,8 @@ const items = [
 ];
 
 const handleLogout = () => {
-  deleteCookie("access_token");
-  sessionStorage.removeItem("userInfo");
-  isLogin.value = false;
+  authStore.logout();
+  router.push("/login");
 };
 const theme = useTheme();
 const isDarkTheme = computed(() => theme.global.current.value.dark);

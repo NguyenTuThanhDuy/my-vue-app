@@ -42,7 +42,7 @@ const socialLinks = [
     link: "https://www.discord.com",
   },
 ];
-const value = ref(1);
+const value = ref(-1);
 const changeValue = (index: number, link: string) => {
   value.value = index;
   window.open(link, "_blank");

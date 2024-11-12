@@ -8,8 +8,10 @@
         <v-card class="pa-6" outlined>
           <!-- Signup Icon -->
           <v-row class="d-flex justify-center">
-            <v-icon large>mdi-account-plus</v-icon>
-            <h1>SignUp</h1>
+            <h2>
+              <v-icon large>mdi-account-plus</v-icon>
+              <v-label large>SignUp</v-label>
+            </h2>
           </v-row>
 
           <!-- Form -->

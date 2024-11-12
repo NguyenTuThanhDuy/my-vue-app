@@ -48,7 +48,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error) => {
-    let {
+    const {
       config,
       response: { status },
     } = error;
