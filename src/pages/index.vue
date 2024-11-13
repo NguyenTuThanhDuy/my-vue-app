@@ -7,14 +7,6 @@
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-select
-        dense
-        :items="pageSizeOptions"
-        v-model="itemCount"
-        label="Items per page"
-        @change="fetchData(currentPage)"
-        max-width="150px"
-      ></v-select>
       <v-pagination
         dense
         v-model="currentPage"
@@ -26,6 +18,14 @@
         :total-visible="5"
       >
       </v-pagination>
+      <v-select
+        dense
+        :items="pageSizeOptions"
+        v-model="itemCount"
+        label="Items per page"
+        @change="fetchData(currentPage)"
+        max-width="150px"
+      ></v-select>
     </v-row>
   </v-container>
 </template>
@@ -40,8 +40,9 @@ import VideoGridItem from "@/components/VideoGridItem.vue";
 let data = ref([] as Video[]);
 let currentPage = ref(1);
 let totalPages = ref(5);
-let itemCount = ref(8);
-const pageSizeOptions = [4, 8, 24, 48];
+let itemCount = ref(10);
+const totalItems = ref(0);
+const pageSizeOptions = [5, 10, 25, 50];
 
 onMounted(async () => {
   await fetchData(currentPage.value);
@@ -56,7 +57,8 @@ const fetchData = async (page = 1) => {
   try {
     const response = await axiosInstance.get(URL);
     data.value = response.data.videos;
-    totalPages.value = data.value.length / itemCount.value;
+    totalItems.value = response.data.total;
+    totalPages.value = Math.round(totalItems.value / itemCount.value);
   } catch (error) {
     console.error("Error fetching videos:", error);
   }
