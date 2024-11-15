@@ -158,10 +158,11 @@ const handleSubmit = async () => {
     const data = {
       username: formData.value.email,
       password: formData.value.password,
-      firstname: "Duy",
-      lastname: "Nguyen",
+      first_name: "Duy",
+      last_name: "Nguyen",
       date_of_birth: "01/10/1997",
-      phone_number: "84913906655",
+      phone_number: "8491390665999",
+      email: formData.value.email,
     };
 
     const response = await axiosInstance.post(url, data);

@@ -1,57 +1,85 @@
 <template>
-  <v-card class="d-flex flex-column gap-2 rounded-lg" outlined>
-    <!-- Hover to play the video -->
-    <v-hover v-model:model-value="isVideoPlaying">
-      <v-card-text>
-        <!-- Thumbnail Image -->
-        <v-img
-          :src="video.thumbnailUrl"
-          aspect-ratio="16/9"
-          :class="isVideoPlaying ? '' : 'rounded-xl'"
-          alt="Video thumbnail"
-        ></v-img>
+  <v-card class="rounded-lg" outlined :to="video.videoUrl">
+    <!-- Thumbnail Image with Tooltip -->
+    <v-hover v-model="isPlaying">
+      <template v-slot:default="{ isHovering, props }">
+        <v-card v-bind="props">
+          <!-- Tooltip -->
 
-        <!-- Video that plays on hover -->
-        <v-overlay :value="isVideoPlaying" absolute>
-          <video
-            ref="videoRef"
-            :src="video.videoUrl"
-            muted
-            playsinline
-            class="w-100 h-100"
-          ></video>
-        </v-overlay>
+          <!-- Thumbnail or Video -->
+          <div class="media-container">
+            <v-tooltip
+              :text="video.title"
+              :disabled="!isPlaying"
+              location="top"
+            >
+              <template v-slot:activator="{ props: tooltipProps }">
+                <!-- Video -->
+                <video
+                  ref="videoRef"
+                  :src="video.videoUrl"
+                  muted
+                  playsinline
+                  loop
+                  class="w-100 h-100 rounded-xl"
+                  :class="{ hidden: !isHovering }"
+                ></video>
 
-        <!-- Video duration -->
-        <v-chip class="position-absolute bottom-1 right-1" small>
-          {{ formatDuration(video.duration) }}
-        </v-chip>
-      </v-card-text>
+                <!-- Thumbnail -->
+                <v-img
+                  v-if="!isHovering"
+                  v-bind="tooltipProps"
+                  :src="video.thumbnailUrl"
+                  aspect-ratio="16/9"
+                  alt="Video thumbnail"
+                >
+                  <v-chip
+                    class="position-absolute bottom-1 right-1"
+                    :style="{ color: chipTextColor }"
+                    small
+                  >
+                    {{ formatDuration(video.duration) }}
+                  </v-chip>
+                </v-img>
+              </template>
+            </v-tooltip>
+          </div>
+        </v-card>
+      </template>
     </v-hover>
 
     <!-- Video Details -->
-    <v-card-text class="d-flex gap-2">
-      <v-avatar>
-        <v-img :src="video.channel.profileUrl" alt="Channel avatar"></v-img>
-      </v-avatar>
-      <div class="d-flex flex-column">
-        <!-- Video Title -->
-        <v-btn :to="`/watch?v=${video.id}`">{{ video.title }}</v-btn>
-        <!-- Channel Name -->
-        <v-btn small :to="`/@${video.channel.id}`">{{
-          video.channel.name
-        }}</v-btn>
-        <!-- Views and Posted Time -->
-        <span class="text-secondary">
+    <v-card class="d-flex gap-2 align-center">
+      <router-link
+        :to="`/@${video.channel.id}`"
+        style="text-decoration: none; display: inline-flex"
+        class="avatar-hover"
+      >
+        <v-avatar>
+          <v-img :src="video.channel.profileUrl" alt="Channel avatar"></v-img>
+        </v-avatar>
+      </router-link>
+      <v-card class="d-flex flex-column" width="100%">
+        <span class="text-truncate" style="text-align: left">
+          {{ video.title }}
+        </span>
+        <router-link
+          :to="`/@${video.channel.id}`"
+          style="text-decoration: none; color: inherit"
+          class="channel-hover"
+        >
+          {{ video.channel.id }}
+        </router-link>
+        <span>
           {{ formattedViews }} Views • {{ formatTimeAgo(video.postedAt) }}
         </span>
-      </div>
-    </v-card-text>
+      </v-card>
+    </v-card>
   </v-card>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount } from "vue";
+import { ref, watch } from "vue";
 import { formatDuration } from "@/utils/formatDuration";
 import { formatTimeAgo } from "@/utils/formatTimeAgo";
 import type Video from "@/types/video.type";
@@ -59,8 +87,10 @@ import type Video from "@/types/video.type";
 // Props (Typed as Video)
 const props = defineProps<{ video: Video }>();
 
-// State for video reference and hover status
-const videoRef = ref<HTMLVideoElement | null>(null);
+// Reference to the video element
+const videoRef = ref<HTMLVideoElement>();
+
+const isPlaying = ref(false);
 
 // Formatter for views
 const VIEW_FORMATTER = new Intl.NumberFormat(undefined, {
@@ -70,43 +100,17 @@ const VIEW_FORMATTER = new Intl.NumberFormat(undefined, {
 // Computed value for formatted views
 const formattedViews = VIEW_FORMATTER.format(props.video.views);
 
-let isVideoPlaying: boolean = false;
+// State for chip text color
+const chipTextColor = ref("white");
 
-// Function to handle video playback
-function handleVideoPlayback() {
+watch(isPlaying, () => {
   if (videoRef.value) {
-    if (isVideoPlaying) {
-      videoRef.value.currentTime = 0; // Reset video to start on hover
-      videoRef.value.play().catch((err) => {
-        console.error("Error playing video:", err);
-      });
-    } else {
-      videoRef.value.pause();
-    }
+    videoRef.value.play();
   }
-}
-
-// Watch for hover state changes using Vuetify's `v-hover`
-watch(
-  () => videoRef.value,
-  (newVal) => {
-    if (newVal) {
-      handleVideoPlayback(); // Ensure video is paused initially
-    }
-  }
-);
-
-onMounted(() => {
-  handleVideoPlayback(); // Pause the video when mounted
-});
-
-// Optional: Pause the video when the component is destroyed
-onBeforeUnmount(() => {
-  handleVideoPlayback();
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .position-absolute {
   position: absolute;
 }
@@ -121,5 +125,32 @@ onBeforeUnmount(() => {
 
 .rounded-xl {
   border-radius: 1rem;
+}
+
+.avatar-hover {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.avatar-hover:hover {
+  transform: scale(1.2);
+}
+
+.channel-hover {
+  font-weight: normal;
+  transition: font-weight 0.3s ease;
+}
+
+.channel-hover:hover {
+  font-weight: bold;
+}
+.media-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+
+.hidden {
+  display: none;
 }
 </style>
