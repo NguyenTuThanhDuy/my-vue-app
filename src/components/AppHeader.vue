@@ -23,7 +23,7 @@
 
     <v-spacer></v-spacer>
 
-    <v-avatar>
+    <v-avatar v-if="authStore.isLogin">
       <v-img
         src="https://lh4.googleusercontent.com/proxy/iCw4ggSAAEb40kANm7DsrhgAQ4JNjw2vD4sSGfsPV9Pvf7Y004lIjgVRP_8iPpszRlqwWgNuZU7YCw1bMirflc9jHjqdvxs1X3ivxwMI"
       ></v-img>

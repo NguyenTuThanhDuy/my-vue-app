@@ -12,8 +12,9 @@
               :text="video.title"
               :disabled="!isPlaying"
               location="top"
+              activator="parent"
             >
-              <template v-slot:activator="{ props: tooltipProps }">
+              <template v-slot:activator="{}">
                 <!-- Video -->
                 <video
                   ref="videoRef"
@@ -23,12 +24,15 @@
                   loop
                   class="w-100 h-100 rounded-xl"
                   :class="{ hidden: !isHovering }"
+                  @mouseenter="playVideo"
+                  @mouseleave="pauseVideo"
+                  v-bind="props"
                 ></video>
 
                 <!-- Thumbnail -->
                 <v-img
                   v-if="!isHovering"
-                  v-bind="tooltipProps"
+                  v-bind="props"
                   :src="video.thumbnailUrl"
                   aspect-ratio="16/9"
                   alt="Video thumbnail"
@@ -103,11 +107,19 @@ const formattedViews = VIEW_FORMATTER.format(props.video.views);
 // State for chip text color
 const chipTextColor = ref("white");
 
-watch(isPlaying, () => {
+const playVideo = () => {
   if (videoRef.value) {
-    videoRef.value.play();
+    videoRef.value
+      .play()
+      .catch((err) => console.error("Error playing video: ", err));
   }
-});
+};
+
+const pauseVideo = () => {
+  if (videoRef.value) {
+    videoRef.value.pause();
+  }
+};
 </script>
 
 <style scoped lang="scss">
