@@ -83,7 +83,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref } from "vue";
+
+import "vidstack/bundle";
+
 import { formatDuration } from "@/utils/formatDuration";
 import { formatTimeAgo } from "@/utils/formatTimeAgo";
 import type Video from "@/types/video.type";
